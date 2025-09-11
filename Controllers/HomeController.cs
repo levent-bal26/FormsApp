@@ -34,9 +34,24 @@ public IActionResult Index(string searchString, string category)
     }
 
 
-        ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
+        //ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name", category);
 
-        return View(products);
+
+        var model = new ProductViewModel
+        {
+
+            Products = products,
+
+            Categories = Repository.Categories,
+
+            SelectedCategory = category
+
+
+
+        };
+
+
+        return View(model);
 }
 
     public IActionResult Privacy()
