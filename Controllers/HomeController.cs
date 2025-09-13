@@ -7,31 +7,31 @@ namespace FormsApp.Controllers;
 
 public class HomeController : Controller
 {
-   
+
 
     public HomeController()
     {
-        
+
     }
 
-
-public IActionResult Index(string searchString, string category)
-{
-    var products = Repository.Products;
-
-    if (!String.IsNullOrEmpty(searchString))
+    [HttpGet]
+    public IActionResult Index(string searchString, string category)
     {
-        products = products
-            .Where(p => p.Name.ToLower().Contains(searchString.ToLower()))
-            .ToList();
-    }
+        var products = Repository.Products;
 
-        if (!String.IsNullOrEmpty(category)&& category !="0")
+        if (!String.IsNullOrEmpty(searchString))
+        {
+            products = products
+                .Where(p => p.Name.ToLower().Contains(searchString.ToLower()))
+                .ToList();
+        }
+
+        if (!String.IsNullOrEmpty(category) && category != "0")
         {
 
 
             products = products.Where(p => p.CategoryId == int.Parse(category)).ToList();
-    }
+        }
 
 
         //ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name", category);
@@ -52,11 +52,22 @@ public IActionResult Index(string searchString, string category)
 
 
         return View(model);
-}
-
-    public IActionResult Privacy()
-    {
-        return View(Repository.Products);
     }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+
+        ViewBag.Categories = Repository.Categories;
+        return View();
+    }
+    
+
+    [HttpPost]
+    public IActionResult Create(Product model)
+    {
+        return View();
+    }
+
 
 }
