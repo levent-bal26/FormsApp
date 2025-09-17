@@ -61,16 +61,27 @@ public class HomeController : Controller
         ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
         return View();
     }
-    
+
 
     [HttpPost]
     public IActionResult Create(Product model)
 
     {
 
-        Repository.CreateProduct(model);
+        if (ModelState.IsValid)
+        {
 
-        return RedirectToAction("Index");
+            Repository.CreateProduct(model);
+
+            return RedirectToAction("Index");
+
+        }
+
+        ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
+
+        return View(model);
+
+
     }
 
 
