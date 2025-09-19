@@ -19,12 +19,13 @@ public class HomeController : Controller
     {
         var products = Repository.Products;
 
-        if (!String.IsNullOrEmpty(searchString))
-        {
-            products = products
-                .Where(p => p.Name.ToLower().Contains(searchString.ToLower()))
-                .ToList();
-        }
+if (!string.IsNullOrEmpty(searchString))
+{
+    products = products
+        .Where(p => !string.IsNullOrEmpty(p.Name) &&
+                    p.Name.ToLower().Contains(searchString.ToLower()))
+        .ToList();
+}
 
         if (!String.IsNullOrEmpty(category) && category != "0")
         {
