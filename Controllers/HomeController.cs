@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using FormsApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 
 namespace FormsApp.Controllers;
 
@@ -65,13 +66,28 @@ if (!string.IsNullOrEmpty(searchString))
 
 
     [HttpPost]
-    public IActionResult Create(Product model)
+    public async Task<IActionResult> Create(Product model, IFormFile imageFile)
 
     {
+        var extension = Path.GetExtension(imageFile.FileName);
+
+        var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}"); 
+
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", imageFile.FileName);
 
         if (ModelState.IsValid)
         {
 
+
+            using (var stream=new FileStream(path, FileMode.Create))
+
+            {
+
+                await imageFile.CopyToAsync(stream);
+
+            }
+
+            model.Image = randomFileName;
             model.ProductId = Repository.Products.Count + 1;
             Repository.CreateProduct(model);
             return RedirectToAction("Index");

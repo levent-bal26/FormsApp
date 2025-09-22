@@ -7,13 +7,13 @@ namespace FormsApp.Models
     public class Product
     {
 
-        [Display(Name="Urun Id")]
+        [Display(Name = "Urun Id")]
         public int ProductId { get; set; }
 
-        [Required(ErrorMessage ="Gerekli bir alan")]
+        [Required(ErrorMessage = "Gerekli bir alan")]
         [StringLength(100)]
         [Display(Name = "Urun Adı")]
-        
+
         public string? Name { get; set; }
 
         [Required]
@@ -21,15 +21,18 @@ namespace FormsApp.Models
         [Display(Name = "Fiyat")]
         public decimal? Price { get; set; }
 
-        [Required]
+
         [Display(Name = "Resim")]
-        public string Image { get; set; } = string.Empty;
+        public string? Image { get; set; } = string.Empty;
 
         public bool IsActive { get; set; }
 
         [Required]
         [Display(Name = "Category")]
-        public int CategoryId { get; set; }  
+        public int? CategoryId { get; set; }  
+        
+       
+
 
 
     }
