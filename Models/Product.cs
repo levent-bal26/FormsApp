@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.JSInterop.Infrastructure;
 
 namespace FormsApp.Models
 {
@@ -9,20 +10,24 @@ namespace FormsApp.Models
         [Display(Name="Urun Id")]
         public int ProductId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Gerekli bir alan")]
+        [StringLength(100)]
         [Display(Name = "Urun Adı")]
         
         public string? Name { get; set; }
 
         [Required]
+        [Range(0, 100000)]
         [Display(Name = "Fiyat")]
         public decimal? Price { get; set; }
 
+        [Required]
         [Display(Name = "Resim")]
-        public string Image { get; set; }=string.Empty;
+        public string Image { get; set; } = string.Empty;
 
         public bool IsActive { get; set; }
 
+        [Required]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }  
 

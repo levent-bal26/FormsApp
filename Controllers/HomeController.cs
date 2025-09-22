@@ -72,8 +72,8 @@ if (!string.IsNullOrEmpty(searchString))
         if (ModelState.IsValid)
         {
 
+            model.ProductId = Repository.Products.Count + 1;
             Repository.CreateProduct(model);
-
             return RedirectToAction("Index");
 
         }
