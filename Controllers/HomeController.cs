@@ -3,121 +3,93 @@ using Microsoft.AspNetCore.Mvc;
 using FormsApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace FormsApp.Controllers;
-
-public class HomeController : Controller
+namespace FormsApp.Controllers
 {
-
-
-    public HomeController()
+    public class HomeController : Controller
     {
-
-    }
-
-    [HttpGet]
-    public IActionResult Index(string searchString, string category)
-    {
-        var products = Repository.Products;
-
-if (!string.IsNullOrEmpty(searchString))
-{
-    products = products
-        .Where(p => !string.IsNullOrEmpty(p.Name) &&
-                    p.Name.ToLower().Contains(searchString.ToLower()))
-        .ToList();
-}
-
-        if (!String.IsNullOrEmpty(category) && category != "0")
+        public HomeController()
         {
-
-
-            products = products.Where(p => p.CategoryId == int.Parse(category)).ToList();
         }
 
-
-        //ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name", category);
-
-
-        var model = new ProductViewModel
+        [HttpGet]
+        public IActionResult Index(string searchString, string category)
         {
+            var products = Repository.Products ?? new List<Product>();
 
-            Products = products,
-
-            Categories = Repository.Categories,
-
-            SelectedCategory = category
-
-
-
-        };
-
-
-        return View(model);
-    }
-
-    [HttpGet]
-    public IActionResult Create()
-    {
-
-        ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
-        return View();
-    }
-
-
-    [HttpPost]
-    public async Task<IActionResult> Create(Product model, IFormFile imageFile)
-    {
-
-        var allowedExtension = new[] { ".jpg", ".jpeg", ".png" };
-
-
-        var extension = Path.GetExtension(imageFile.FileName);
-
-        var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}"); 
-
-       var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
-
-
-        if (imageFile != null)
-        {
-            if (!allowedExtension.Contains(extension))
-
+            // Arama filtresi
+            if (!string.IsNullOrEmpty(searchString))
             {
-
-                ModelState.AddModelError("", "Geçerli bir resim seçiniz");
-
-           }
-
-        }
-
-
-        if (ModelState.IsValid)
-        {
-
-
-            using (var stream = new FileStream(path, FileMode.Create))
-
-            {
-
-                await imageFile.CopyToAsync(stream);
-
+                products = products
+                    .Where(p => !string.IsNullOrEmpty(p.Name) &&
+                                p.Name.ToLower().Contains(searchString.ToLower()))
+                    .ToList();
             }
 
-            model.Image = randomFileName;
-            model.ProductId = Repository.Products.Count + 1;
-            Repository.CreateProduct(model);
-            return RedirectToAction("Index");
+            // Kategori filtresi
+            if (!string.IsNullOrEmpty(category) && int.TryParse(category, out int catId) && catId != 0)
+            {
+                products = products.Where(p => p.CategoryId == catId).ToList();
+            }
 
+            var model = new ProductViewModel
+            {
+                Products = products,
+                Categories = Repository.Categories ?? new List<Category>(),
+                SelectedCategory = category
+            };
+
+            return View(model);
         }
 
-        ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
+            return View();
+        }
 
-        return View(model);
+        [HttpPost]
+        public async Task<IActionResult> Create(Product model, IFormFile? imageFile)
+        {
+            if (imageFile == null)
+            {
+                ModelState.AddModelError("", "Resim seçiniz");
+            }
 
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            string? randomFileName = null;
 
+            if (imageFile != null)
+            {
+                var extension = Path.GetExtension(imageFile.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("", "Geçerli bir resim seçiniz");
+                }
+                else
+                {
+                    randomFileName = $"{Guid.NewGuid()}{extension}";
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                model.Image = randomFileName ?? "";
+                model.ProductId = (Repository.Products?.Count ?? 0) + 1;
+                Repository.CreateProduct(model);
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
+            return View(model);
+        }
     }
-
-
 }
