@@ -73,7 +73,8 @@ if (!string.IsNullOrEmpty(searchString))
 
         var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}"); 
 
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", imageFile.FileName);
+       var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+
 
         if (ModelState.IsValid)
         {
