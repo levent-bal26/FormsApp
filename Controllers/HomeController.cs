@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using FormsApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FormsApp.Controllers;
 
@@ -67,8 +68,11 @@ if (!string.IsNullOrEmpty(searchString))
 
     [HttpPost]
     public async Task<IActionResult> Create(Product model, IFormFile imageFile)
-
     {
+
+        var allowedExtension = new[] { ".jpg", ".jpeg", ".png" };
+
+
         var extension = Path.GetExtension(imageFile.FileName);
 
         var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}"); 
@@ -76,11 +80,24 @@ if (!string.IsNullOrEmpty(searchString))
        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
 
 
+        if (imageFile != null)
+        {
+            if (!allowedExtension.Contains(extension))
+
+            {
+
+                ModelState.AddModelError("", "Geçerli bir resim seçiniz");
+
+           }
+
+        }
+
+
         if (ModelState.IsValid)
         {
 
 
-            using (var stream=new FileStream(path, FileMode.Create))
+            using (var stream = new FileStream(path, FileMode.Create))
 
             {
 
