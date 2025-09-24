@@ -91,5 +91,15 @@ namespace FormsApp.Controllers
             ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
             return View(model);
         }
+
+        public IActionResult Edit()
+        {
+
+            ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
+            return View();
+
+        }
     }
+
+    
 }
