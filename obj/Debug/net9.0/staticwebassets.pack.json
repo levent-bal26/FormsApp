@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\ESOGU\\Desktop\\FormsApp\\wwwroot\\img\\05088ae2-0f0a-4b76-a7e8-d95ba335cbc6.jpg",
+      "PackagePath": "staticwebassets\\img\\05088ae2-0f0a-4b76-a7e8-d95ba335cbc6.jpg"
+    },
+    {
       "Id": "C:\\Users\\ESOGU\\Desktop\\FormsApp\\wwwroot\\img\\1.jpg",
       "PackagePath": "staticwebassets\\img\\1.jpg"
     },
@@ -35,6 +39,14 @@
     {
       "Id": "C:\\Users\\ESOGU\\Desktop\\FormsApp\\wwwroot\\img\\6.jpg",
       "PackagePath": "staticwebassets\\img\\6.jpg"
+    },
+    {
+      "Id": "C:\\Users\\ESOGU\\Desktop\\FormsApp\\wwwroot\\img\\82c5ceb6-d743-45f2-8599-5a952b94e100.jpg",
+      "PackagePath": "staticwebassets\\img\\82c5ceb6-d743-45f2-8599-5a952b94e100.jpg"
+    },
+    {
+      "Id": "C:\\Users\\ESOGU\\Desktop\\FormsApp\\wwwroot\\img\\f720ea75-68d0-4198-b017-d3afccc08b28.jpg",
+      "PackagePath": "staticwebassets\\img\\f720ea75-68d0-4198-b017-d3afccc08b28.jpg"
     },
     {
       "Id": "C:\\Users\\ESOGU\\Desktop\\FormsApp\\wwwroot\\js\\site.js",

@@ -25,7 +25,9 @@
 <div class="input-group mb-3">
 <input type="file" name="imageFile" id="imageFile" class="form-control">
 </div>
-
+<div>        
+<img src="~/img/@Model.Image" alt="" style="width:100px;">
+</div>
 <div class="mb-3">
 <label asp-for="CategoryId" class="form-label"></label>
 <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
