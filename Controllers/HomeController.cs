@@ -1,8 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using FormsApp.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using FormsApp.Models;
 
 namespace FormsApp.Controllers
 {
@@ -71,7 +76,7 @@ namespace FormsApp.Controllers
                 else
                 {
                     randomFileName = $"{Guid.NewGuid()}{extension}";
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", randomFileName);
 
                     using (var stream = new FileStream(path, FileMode.Create))
                     {
@@ -81,9 +86,7 @@ namespace FormsApp.Controllers
             }
 
             if (ModelState.IsValid)
-
-            {                
-
+            {
                 model.Image = randomFileName ?? "";
                 model.ProductId = (Repository.Products?.Count ?? 0) + 1;
                 Repository.CreateProduct(model);
@@ -94,28 +97,55 @@ namespace FormsApp.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public IActionResult Edit(int? id)
         {
-
             if (id == null)
             {
-
                 return NotFound();
-
             }
 
-            var entity = Repository.Products.FirstOrDefault(p => p.ProductId == id);
+            var entity = Repository.Products?.FirstOrDefault(p => p.ProductId == id.Value);
 
             if (entity == null)
             {
-                
-                 return NotFound();
+                return NotFound();
             }
 
             ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
             return View(entity);
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, Product model, IFormFile? imageFile)
+        {
+            if (id != model.ProductId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (imageFile != null)
+                {
+                    var extension = Path.GetExtension(imageFile.FileName);
+                    var randomFileName = $"{Guid.NewGuid()}{extension}";
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", randomFileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    model.Image = randomFileName;
+                }
+
+                Repository.EditProduct(model);
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
+            return View(model);
         }
     }
-    
 }
