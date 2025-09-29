@@ -147,5 +147,33 @@ namespace FormsApp.Controllers
             ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
             return View(model);
         }
+
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+
+            {
+
+                return NotFound();
+
+            }
+
+            var entity = Repository.Products?.FirstOrDefault(p => p.ProductId == id.Value);
+
+            if (entity == null)
+
+            {
+
+                return NotFound();
+
+            }
+            Repository.DeleteProduct(entity);
+            return RedirectToAction("Index");
+
+        }
+
+
     }
+       
 }
