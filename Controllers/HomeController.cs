@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -100,17 +99,10 @@ namespace FormsApp.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var entity = Repository.Products?.FirstOrDefault(p => p.ProductId == id.Value);
-
-            if (entity == null)
-            {
-                return NotFound();
-            }
+            if (entity == null) return NotFound();
 
             ViewBag.Categories = new SelectList(Repository.Categories ?? new List<Category>(), "CategoryId", "Name");
             return View(entity);
@@ -119,10 +111,7 @@ namespace FormsApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Product model, IFormFile? imageFile)
         {
-            if (id != model.ProductId)
-            {
-                return NotFound();
-            }
+            if (id != model.ProductId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -148,60 +137,41 @@ namespace FormsApp.Controllers
             return View(model);
         }
 
-
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
-            if (id == null)
-
-            {
-
-                return NotFound();
-
-            }
+            if (id == null) return NotFound();
 
             var entity = Repository.Products?.FirstOrDefault(p => p.ProductId == id.Value);
-
-            if (entity == null)
-
-            {
-
-                return NotFound();
-
-            }
+            if (entity == null) return NotFound();
 
             return View("DeleteConfirm", entity);
-
         }
 
-
-
- [HttpPost]
+        [HttpPost]
         public IActionResult Delete(int id, int ProductId)
-
         {
-
-            if (id != ProductId)
-            {
-                return NotFound();
-            }
+            if (id != ProductId) return NotFound();
 
             var entity = Repository.Products?.FirstOrDefault(p => p.ProductId == ProductId);
+            if (entity == null) return NotFound();
 
-        
-
-            if (entity == null)
-
-            {
-
-                return NotFound();
-
-            }
             Repository.DeleteProduct(entity);
             return RedirectToAction("Index");
-
         }
 
+        [HttpPost]
+        public IActionResult EditProducts(List<Product> Products)
+        {
+            if (Products != null && Products.Count > 0)
+            {
+                foreach (var product in Products)
+                {
+                    Repository.EditProduct(product);
+                }
+            }
 
+            return RedirectToAction("Index");
+        }
     }
-       
 }
