@@ -69,7 +69,7 @@ namespace FormsApp.Models
                 entity.Price = updatedProduct.Price;
                 entity.Image = updatedProduct.Image;
                 entity.CategoryId = updatedProduct.CategoryId;
-                entity.IsActive=updatedProduct.IsActive;
+                entity.IsActive = updatedProduct.IsActive;
 
 
             }

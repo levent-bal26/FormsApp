@@ -161,17 +161,22 @@ namespace FormsApp.Controllers
         }
 
         [HttpPost]
+        
         public IActionResult EditProducts(List<Product> Products)
+
         {
-            if (Products != null && Products.Count > 0)
+
+            foreach (var product in Products)
             {
-                foreach (var product in Products)
-                {
-                    Repository.EditProduct(product);
-                }
+
+                Repository.EditProduct(product);
             }
 
             return RedirectToAction("Index");
+
         }
+
+
     }
+
 }
