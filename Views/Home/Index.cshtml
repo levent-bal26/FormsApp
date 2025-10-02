@@ -4,26 +4,10 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="card card-body my-3">
-    <form asp-action="EditProducts" method="post">
-        <div class="container">
-            <div class="row">
-                <div class="col md-11">
-                    <select name="category" 
-                            class="form-select" 
-                            asp-items="@(new SelectList(Model.Categories, "CategoryId", "Name", Model.SelectedCategory))">
-                        <option value="0">Hepsi</option>
-                    </select>
-                </div>
-                <div class="col md-1">
-                    <button type="submit" class="btn btn-primary">Filtrele</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+<div class="card card-body my-3"></div>
 
 <form asp-action="EditProducts" method="post">
+
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -45,9 +29,9 @@
                     </td>
                     <td>@Model.Products[i].Name</td>
                     <td>@Model.Products[i].Price</td>
+
                     <td>
                         <input type="checkbox" asp-for="Products[i].IsActive" />
-
                     </td>
                     <td>
                         <a href="/Home/Edit/@Model.Products[i].ProductId" class="btn btn-sm btn-primary">Edit</a>
